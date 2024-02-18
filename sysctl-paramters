@@ -67,3 +67,50 @@ net.ipv6.conf.default.accept_ra=0
 net.ipv6.conf.default.accept_ra = 0
 [root@cnode1 tmp]# cat /etc/sysctl.conf
 ================
+=============================================================================
+Modification in the pipeline
+
+[ans@workcentos ansible]$ cat sysctl-update.yml
+---
+- name: Configure sysctl parameters
+  hosts: test
+  become: yes
+
+  vars_files:
+    - sysct_parameters.yml
+    - activate_parameters.yml
+
+  tasks:
+    - name: Backup sysctl.conf
+      command: cp /etc/sysctl.conf /etc/sysctl.conf.bakcopy-v1
+      ignore_errors: yes
+
+    - name: Update sysctl parameters
+      lineinfile:
+        path: /etc/sysctl.conf
+        insertafter: EOF
+        state: present
+        backup: yes
+        line: "{{ item.key }} = {{ item.value }}"
+      with_dict: "{{ sysct_parameters }}"
+
+    - name: Activate the sysctl parameters
+      sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: present
+      with_items: "{{ active_parameters }}"
+
+#    - name: Display updated sysct parameters
+#      command: sysctl "{{ item.key }}"
+#      with_items: "{{ sysct_parameters }}"
+#      register: sysctl_output
+
+
+#    - name: Verify changes
+#      debug:
+#        msg: "Updated {{ item.item.key }} to {{ item.stdout }}"
+#      with_items: "{{ sysctl_output.results }}"
+#      when: item.stdout != item.item.value
+[ans@workcentos ansible]$
+=============================================================
