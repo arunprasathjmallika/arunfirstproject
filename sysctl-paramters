@@ -51,3 +51,19 @@ active_parameters:
 #      with_items: "{{ sysctl_output.results }}"
 #      when: item.stdout != item.item.value
 [ans@workcentos ansible]$
+
+================================================================================
+Output
+----------
+[root@cnode1 tmp]# sysctl net.ipv6.conf.default.accept_ra
+net.ipv6.conf.default.accept_ra = 0
+[root@cnode1 tmp]# sysctl net.ipv6.conf.all.accept_ra
+net.ipv6.conf.all.accept_ra = 0
+[root@cnode1 tmp]# cat /etc/sysctl.conf | grep net.ipv6.conf.default.accept_ra
+net.ipv6.conf.default.accept_ra=0
+net.ipv6.conf.default.accept_ra = 0
+[root@cnode1 tmp]# cat /etc/sysctl.conf | grep net.ipv6.conf.default.accept_ra
+net.ipv6.conf.default.accept_ra=0
+net.ipv6.conf.default.accept_ra = 0
+[root@cnode1 tmp]# cat /etc/sysctl.conf
+================
